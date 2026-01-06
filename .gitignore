@@ -1,0 +1,42 @@
+# Datasets
+data/
+dataset/
+datasets/
+CelebA/
+*.csv
+*.tsv
+*.hdf5
+*.h5
+*.npz
+*.npy
+*.pickle
+*.pkl
+
+# Trained models / checkpoints
+models/
+checkpoints/
+weights/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.pb
+
+# Logs and runs
+logs/
+runs/
+wandb/
+mlruns/
+tensorboard/
+events.out.tfevents.*
+
+# Common Python extras (optional but recommended)
+__pycache__/
+*.py[cod]
+*.so
+.env
+.venv/
+venv/
+env/
+.DS_Store
+Thumbs.db
