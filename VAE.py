@@ -11,12 +11,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 
-# --- SPEED OPTIMIZATION ---
+#OPTIMIZATION
 # This enables the auto-tuner to find the best algorithm for your hardware
 torch.backends.cudnn.benchmark = True
 
-# --- 1. CONFIGURATION ---
-# Hyperparameters
+#Hyperparameters
 LATENT_DIM = 128
 BATCH_SIZE = 128
 LEARNING_RATE = 1e-3
@@ -26,7 +25,7 @@ IMG_SIZE = 64
 # PATH SETUP
 DATA_PATH = 'C:\\Users\\hegde\\OneDrive\\Desktop\\MS AI\\CV\\P3_VAE\\CelebA\\img_align_celeba' 
 
-# --- 2. CUSTOM DATASET ---
+#CUSTOM DATASET
 class CelebADataset(Dataset):
     def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
@@ -54,7 +53,7 @@ class CelebADataset(Dataset):
             # Return a dummy tensor so training doesn't crash on one bad file
             return torch.zeros(3, IMG_SIZE, IMG_SIZE) 
 
-# --- 3. VAE MODEL ARCHITECTURE ---
+#VAE MODEL ARCHITECTURE
 class VAE(nn.Module):
     def __init__(self, latent_dim=LATENT_DIM):
         super(VAE, self).__init__()
@@ -118,13 +117,13 @@ class VAE(nn.Module):
         reconstruction = self.decoder(decoder_input)
         return reconstruction, mu, logvar
 
-# --- 4. LOSS FUNCTION ---
+#LOSS FUNCTION
 def loss_function(recon_x, x, mu, logvar):
     BCE = nn.functional.binary_cross_entropy(recon_x, x, reduction='sum')
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     return BCE + KLD
 
-# --- 5. MAIN EXECUTION BLOCK ---
+#MAIN EXECUTION BLOCK
 if __name__ == '__main__':
     # --- GPU CHECK ---
     print("\n--- HARDWARE CHECK ---")
@@ -203,7 +202,7 @@ if __name__ == '__main__':
     torch.save(model.state_dict(), "vae_celeba.pth")
     print("Model saved to vae_celeba.pth")
 
-    # --- VISUALIZATION ---
+    #VISUALIZATION
     print("Generating visualizations...")
     
     # 1. Loss Curve

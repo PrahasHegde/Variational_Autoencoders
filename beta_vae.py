@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import time
 
-# --- CONFIGURATION ---
+#CONFIGURATION
 LATENT_DIM = 128
 BATCH_SIZE = 64
 LEARNING_RATE = 1e-3
@@ -22,7 +22,7 @@ DATA_PATH = 'C:\\Users\\hegde\\OneDrive\\Desktop\\MS AI\\CV\\P3_VAE\\CelebA\\img
 # We will train two separate models with these beta values
 BETAS_TO_TEST = [4.0, 10.0] 
 
-# --- DATASET & MODEL (Same as before) ---
+#DATASET & MODEL
 class CelebADataset(Dataset):
     def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
@@ -52,6 +52,7 @@ class VAE(nn.Module):
         self.fc_mu = nn.Linear(self.flatten_size, latent_dim)
         self.fc_logvar = nn.Linear(self.flatten_size, latent_dim)
         self.decoder_input = nn.Linear(latent_dim, self.flatten_size)
+
         self.decoder = nn.Sequential(
             nn.ConvTranspose2d(256, 128, 4, 2, 1), nn.BatchNorm2d(128), nn.ReLU(),
             nn.ConvTranspose2d(128, 64, 4, 2, 1), nn.BatchNorm2d(64), nn.ReLU(),
@@ -76,14 +77,14 @@ class VAE(nn.Module):
         decoder_input = self.decoder_input(z).view(-1, 256, 4, 4)
         return self.decoder(decoder_input)
 
-# --- BETA LOSS FUNCTION ---
+#BETA LOSS FUNCTION
 def beta_loss_function(recon_x, x, mu, logvar, beta):
     BCE = nn.functional.binary_cross_entropy(recon_x, x, reduction='sum')
     KLD = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
     # The magic happens here: Multiply KLD by Beta
     return BCE + (beta * KLD)
 
-# --- VISUALIZATION FUNCTION ---
+#VISUALIZATION FUNCTION
 def generate_traversals(model, device, beta_val):
     print(f"Generating Traversals for Beta={beta_val}...")
     model.eval()
@@ -117,7 +118,7 @@ def generate_traversals(model, device, beta_val):
     plt.savefig(f"beta_{int(beta_val)}_traversals.png")
     plt.close()
 
-# --- MAIN LOOP ---
+#MAIN LOOP
 if __name__ == '__main__':
     torch.backends.cudnn.benchmark = True
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -133,7 +134,7 @@ if __name__ == '__main__':
     dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True, 
                             num_workers=2, pin_memory=True if torch.cuda.is_available() else False)
 
-    # --- LOOP OVER BETAS ---
+    #LOOP OVER BETAS
     for beta in BETAS_TO_TEST:
         print(f"\n\n===================================")
         print(f"   STARTING TRAINING FOR BETA = {beta}")

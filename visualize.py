@@ -9,14 +9,14 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-# --- CONFIGURATION ---
+#CONFIGURATION
 LATENT_DIM = 128
 IMG_SIZE = 64
 DATA_PATH = 'C:\\Users\\hegde\\OneDrive\\Desktop\\MS AI\\CV\\P3_VAE\\CelebA\\img_align_celeba'
 MODEL_PATH = "vae_celeba.pth"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# --- RE-DEFINE CLASSES (Must match training exactly) ---
+#RE-DEFINE CLASSES
 class CelebADataset(Dataset):
     def __init__(self, root_dir, transform=None):
         self.root_dir = root_dir
@@ -42,6 +42,7 @@ class VAE(nn.Module):
         self.fc_mu = nn.Linear(self.flatten_size, latent_dim)
         self.fc_logvar = nn.Linear(self.flatten_size, latent_dim)
         self.decoder_input = nn.Linear(latent_dim, self.flatten_size)
+        
         self.decoder = nn.Sequential(
             nn.ConvTranspose2d(256, 128, 4, 2, 1), nn.BatchNorm2d(128), nn.ReLU(),
             nn.ConvTranspose2d(128, 64, 4, 2, 1), nn.BatchNorm2d(64), nn.ReLU(),
@@ -67,13 +68,13 @@ class VAE(nn.Module):
         decoder_input = self.decoder_input(z).view(-1, 256, 4, 4)
         return self.decoder(decoder_input)
 
-# --- LOAD MODEL ---
+#LOAD MODEL
 print("Loading model...")
 model = VAE(latent_dim=LATENT_DIM).to(DEVICE)
 model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
 model.eval() # Set to evaluation mode
 
-# --- LOAD DATA ---
+#LOAD DATA
 transform = transforms.Compose([
     transforms.CenterCrop(178),
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
